@@ -8,28 +8,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      THEOS: ${{ github.workspace }}/theos
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y perl clang make ldid dpkg-dev
+          sudo apt-get update
+          sudo apt-get install -y git make perl clang dpkg-dev ldid
 
       - name: Install Theos
         run: |
-          git clone --recursive https://github.com/theos/theos.git $THEOS
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
 
       - name: Build package
+        env:
+          THEOS: $HOME/theos
         run: |
+          export THEOS=$HOME/theos
+          export PATH=$THEOS/bin:$PATH
           make package
 
       - name: Upload package
         uses: actions/upload-artifact@v4
         with:
-          name: package
+          name: tweak-deb
           path: packages/*.deb
