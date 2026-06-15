@@ -1,0 +1,9 @@
+Package: com.yourcompany.yallaludotweak
+Name: YallaLudoTweak
+Depends: mobilesubstrate
+Version: 1.0.0-1
+Architecture: iphoneos-arm
+Description: A tweak for Yalla Ludo with a custom UI.
+Maintainer: Your Name <your.email@example.com>
+Author: Your Name <your.email@example.com>
+Section: Tweaks
