@@ -8,6 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      THEOS: ${{ github.workspace }}/theos
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,16 +18,13 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y git make perl clang
+          sudo apt install -y perl clang make ldid dpkg-dev
 
       - name: Install Theos
         run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          git clone --recursive https://github.com/theos/theos.git $THEOS
 
       - name: Build package
-        env:
-          THEOS: ${{ env.THEOS }}
         run: |
           make package
 
