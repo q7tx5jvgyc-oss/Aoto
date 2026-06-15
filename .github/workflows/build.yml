@@ -1,5 +1,4 @@
-name: Build Tweak
-
+name: Build YallaLudoTweak
 on:
   push:
   workflow_dispatch:
@@ -7,6 +6,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      THEOS: ${{ github.workspace }}/theos
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout
@@ -17,20 +20,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git make perl clang dpkg-dev wget curl unzip
 
-          # تثبيت ldid الصحيح (Procursus repo)
+      - name: Install ldid (Procursus)
+        run: |
           echo "deb [trusted=yes] https://repo.procurs.us/ stable main" | sudo tee /etc/apt/sources.list.d/procursus.list
           sudo apt-get update
           sudo apt-get install -y ldid
 
       - name: Install Theos
         run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          git clone --recursive https://github.com/theos/theos.git $THEOS
 
       - name: Build package
-        env:
-          THEOS: $HOME/theos
         run: |
-          export THEOS=$HOME/theos
+          export THEOS=$THEOS
           export PATH=$THEOS/bin:$PATH
           make package
 
