@@ -1,36 +1,10 @@
-name: Build
+- name: Install dependencies
+  run: |
+    sudo apt-get update
+    sudo apt-get install -y git make perl clang dpkg-dev curl wget
 
-on:
-  push:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git make perl clang dpkg-dev ldid
-
-      - name: Install Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
-
-      - name: Build package
-        env:
-          THEOS: $HOME/theos
-        run: |
-          export THEOS=$HOME/theos
-          export PATH=$THEOS/bin:$PATH
-          make package
-
-      - name: Upload package
-        uses: actions/upload-artifact@v4
-        with:
-          name: tweak-deb
-          path: packages/*.deb
+    # تثبيت ldid بطريقة صحيحة
+    wget https://github.com/ProcursusTeam/ldid/releases/latest/download/ldid_linux.zip
+    unzip ldid_linux.zip
+    sudo mv ldid /usr/local/bin/ldid
+    sudo chmod +x /usr/local/bin/ldid
